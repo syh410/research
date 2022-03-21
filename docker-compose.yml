@@ -1,0 +1,18 @@
+version: "3"
+services:
+  face_recognition:
+    image: shinoi2/pji-research:face_recognition
+    container_name: face_recognition
+    volumes:
+      - "/home/face_recognition/data:/data"
+  http_api_service:
+    image: shinoi2/pji-research:http_api_service
+    container_name: http_api_service
+    ports:
+      - "5000:5000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
