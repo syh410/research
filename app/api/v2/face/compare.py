@@ -12,14 +12,14 @@ def compare():
         return jsonify({
             "msg": "image1 或 url1 参数不存在",
             "code": 1
-        }), 200
+        }), 400
     image1 = cv2.imencode('.jpg', image1)[1].tostring()
     image2 = get_image_v2(image='image2', url='url2')
     if image2 is None:
         return jsonify({
             "msg": "image2 或 url2 参数不存在",
             "code": 1
-        }), 200
+        }), 400
     image2 = cv2.imencode('.jpg', image2)[1].tostring()
     rtn, score = face_recognition_client.compare(image1, image2)
     if rtn != 0:
@@ -32,7 +32,7 @@ def compare():
         return {
             "msg": msg,
             "code": rtn,
-        }, 200
+        }, 400
     def format_data(score):
         return {
             "msg": "OK",

@@ -12,7 +12,7 @@ def light():
         return jsonify({
             "msg": "image 或 url 参数不存在",
             "code": 1
-        }), 200
+        }), 400
     result = light_detector.detection(image)
 
     def format_data(result):

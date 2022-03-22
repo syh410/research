@@ -12,14 +12,14 @@ def search():
         return jsonify({
             "msg": "image 或 url 参数不存在",
             "code": 1,
-        }), 200
+        }), 400
     image = cv2.imencode('.jpg', image)[1].tostring()
     repo_id = request.form.get("repo_id")
     if repo_id is None:
         return jsonify({
             "msg": "repo_id 参数不存在",
             "code": 1,
-        }), 200
+        }), 400
     rtn, result = face_recognition_client.search(image, repo_id)
     if rtn != 0:
         error_codes = {
@@ -32,7 +32,7 @@ def search():
         return {
             "msg": msg,
             "code": rtn
-        }, 200
+        }, 400
     def format_data(result):
         return {
             "msg": "OK",
