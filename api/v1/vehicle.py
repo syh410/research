@@ -3,13 +3,13 @@ from common import get_image_v1
 from flask import jsonify
 from . import v1_bp
 
-mask_detector = hub.Module(name="pyramidbox_lite_server_mask")
-@v1_bp.route('/mask', methods=['POST'])
-def mask():
+vehicles_detector = hub.Module(name="yolov3_darknet53_vehicles")
+@v1_bp.route('/vehicle', methods=['POST'])
+def vehicle():
     image = get_image_v1()
     if image is None:
         return "Image not found", 400
-    result = mask_detector.face_detection(
+    result = vehicles_detector.object_detection(
         images=[image],
         use_gpu=True,
         visualization=False)
@@ -17,7 +17,14 @@ def mask():
     def format_data(result):
         count = len(result["data"])
         data = []
-        mask_count = no_mask_count = 0
+        count_map = {
+            "car": 0,
+            "truck": 0,
+            "bus": 0,
+            "motorbike": 0,
+            "tricycle": 0,
+            "carplate": 0,
+        }
         for i in range(count):
             data.append({
                 "rect": {
@@ -26,17 +33,18 @@ def mask():
                     "left": result["data"][i]["left"],
                     "right": result["data"][i]["right"],
                 },
-                "mask": result["data"][i]["label"] == "MASK",
+                "label": result["data"][i]["label"],
                 "score": result["data"][i]["confidence"],
             })
-            if result["data"][i]["label"] == "MASK":
-                mask_count += 1
-            else:
-                no_mask_count += 1
+            count_map[result["data"][i]["label"]] += 1
         return {
             "count": count,
-            "mask_count": mask_count,
-            "no_mask_count": no_mask_count,
+            "car_count": count_map["car"],
+            "truck_count": count_map["truck"],
+            "bus_count": count_map["bus"],
+            "motorbike_count": count_map["motorbike"],
+            "tricycle_count": count_map["tricycle"],
+            "carplate_count": count_map["carplate"],
             "data": data,
         }
 

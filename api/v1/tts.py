@@ -3,11 +3,11 @@ import paddle
 from pydub import AudioSegment
 from flask import send_file, request, current_app
 from paddlespeech.cli import TTSExecutor
-from . import v1bp
+from . import v1_bp
 
 
 tts_executor = TTSExecutor()
-@v1bp.route('tts', methods=['POST'])
+@v1_bp.route('/tts', methods=['POST'])
 def tts():
     content = request.json
     text = content['text']

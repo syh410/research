@@ -1,22 +1,22 @@
-import os
 import uuid
 import paddle
 from pydub import AudioSegment
 from flask import jsonify, request, current_app
 from paddlespeech.cli import TTSExecutor
 from common.minio import upload_file
-
-
-from . import v2bp
+from . import v2_bp
 
 
 tts_executor = TTSExecutor()
-@v2bp.route('tts', methods=['POST'])
+@v2_bp.route('/tts', methods=['POST'])
 def tts():
     content = request.json
     text = content['text']
     if not text:
-        return "Text not found", 400
+        return jsonify({
+            "msg": "text 参数不存在",
+            "code": 1
+        }), 400
     wav_file = tts_executor(
         text=text,
         output='/tmp/' + str(uuid.uuid4()) + '.wav',
@@ -44,13 +44,9 @@ def tts():
     
     mp3_file = wav_to_mp3(wav_file)
     url = upload_file(mp3_file)
-    current_app.logger.info('Minio presigned get url has been generated: {}'.format(url))
-    if not current_app.debug:
-        os.remove(wav_file)
-        os.remove(mp3_file)
-
+    current_app.logger.info('Remove mp3 file and wave file: {}, {}'.format(mp3_file, wav_file))
     return jsonify({
-        "code": 0,
+        "url": url,
         "msg": "OK",
-        "url": url
+        "code": 0
     })

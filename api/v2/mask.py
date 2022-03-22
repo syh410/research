@@ -1,14 +1,17 @@
 import paddlehub as hub
-from common import get_image_v1
+from common import get_image_v2
 from flask import jsonify
-from . import v1_bp
+from . import v2_bp
 
 mask_detector = hub.Module(name="pyramidbox_lite_server_mask")
-@v1_bp.route('/mask', methods=['POST'])
+@v2_bp.route('/mask', methods=['POST'])
 def mask():
-    image = get_image_v1()
+    image = get_image_v2()
     if image is None:
-        return "Image not found", 400
+        return jsonify({
+            "msg": "image 或 url 参数不存在",
+            "code": 1
+        }), 400
     result = mask_detector.face_detection(
         images=[image],
         use_gpu=True,
@@ -34,6 +37,8 @@ def mask():
             else:
                 no_mask_count += 1
         return {
+            "msg": "OK",
+            "code": 0,
             "count": count,
             "mask_count": mask_count,
             "no_mask_count": no_mask_count,

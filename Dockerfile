@@ -37,8 +37,8 @@ RUN python3 -m pip install pip --upgrade && \
         pytest-runner && \
     pip install paddlepaddle-gpu==2.2.2.post112 -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
 
-
-ADD third/paddle.tar.gz /root/
+ADD light.pth /root/
+ADD paddle.tar.gz /root/
 
 RUN hub install pyramidbox_lite_server && \
     hub install pyramidbox_lite_server_mask && \
@@ -46,12 +46,12 @@ RUN hub install pyramidbox_lite_server && \
     hub install yolov3_darknet53_pedestrian && \
     hub install yolov3_darknet53_vehicles
 
-COPY src/light_detector/light_YOLOX /root/light_detector/light_YOLOX
+COPY light_detector/light_YOLOX /root/light_detector/light_YOLOX
 
 RUN cd /root/light_detector/light_YOLOX && \
     pip install -r requirements.txt && \
     pip install -v -e .
 
-COPY src/ /root/ 
+COPY server.py api common face_recognition License_Plate_Detection_Pytorch light_detector /root/ 
 
 ENTRYPOINT cd /root && python3 server.py
