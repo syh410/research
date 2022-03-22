@@ -4,7 +4,7 @@ from flask import jsonify
 from . import v1_bp
 
 
-light_detector = LightDetector("/home/pji/third/light.pth")
+light_detector = LightDetector("/root/light.pth")
 @v1_bp.route('/light', methods=['POST'])
 def light():
     image = get_image_v1()

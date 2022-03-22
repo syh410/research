@@ -1,9 +1,6 @@
-[submodule "src/License_Plate_Detection_Pytorch"]
-	path = src/License_Plate_Detection_Pytorch
+[submodule "app/License_Plate_Detection_Pytorch"]
+	path = app/License_Plate_Detection_Pytorch
 	url = git@github.com:shinoi2/License_Plate_Detection_Pytorch.git
-[submodule "src/light_detector/light_YOLOX"]
-	path = src/light_detector/light_YOLOX
-	url = https://github.com/shinoi2/light_YOLOX.git
-[submodule "License_Plate_Detection_Pytorch"]
-	path = License_Plate_Detection_Pytorch
-	url = git@github.com:shinoi2/License_Plate_Detection_Pytorch.git
+[submodule "app/light_detector/light_YOLOX"]
+	path = app/light_detector/light_YOLOX
+	url = git@github.com:shinoi2/light_YOLOX.git
