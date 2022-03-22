@@ -7,6 +7,8 @@ services:
       - "/home/face_recognition/data:/data"
   http_api_service:
     image: shinoi2/pji-research:http_api_service
+    environment:
+      - GRPC_POLL_STRATEGY=poll
     container_name: http_api_service
     ports:
       - "5000:5000"

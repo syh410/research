@@ -12,20 +12,20 @@ def upload():
         return jsonify({
             "msg": "image 或 url 参数不存在",
             "code": 1
-        }), 400
+        }), 200
     image = cv2.imencode('.jpg', image)[1].tostring()
     repo_id = request.form.get("repo_id")
     if repo_id is None:
         return jsonify({
             "msg": "repo_id 参数不存在",
             "code": 1
-        }), 400
+        }), 200
     face_id = request.form.get("face_id")
     if face_id is None:
         return jsonify({
             "msg": "face_id 参数不存在",
             "code": 1
-        }), 400
+        }), 200
     
     rtn = face_recognition_client.upload(image, face_id, repo_id)
     if rtn != 0:
@@ -39,7 +39,7 @@ def upload():
         return jsonify({
             "msg": msg,
             "code": rtn
-        }), 400
+        }), 200
     def format_data():
         return {
             "msg": "OK",

@@ -1,12 +1,14 @@
 from minio import Minio
 from datetime import timedelta
 from os.path import basename
+import os
 
 
-MINIO_HOST = ""
-ACCESS_KEY = "root"
-SECRET_KEY = "root123456"
-MINIO_BUCKET = "pjicloud"
+MINIO_HOST = os.getenv('MINIO_HOST', "192.168.66.247:9000")
+ACCESS_KEY = os.getenv('MINIO_ACCESS_KEY', "root")
+SECRET_KEY = os.getenv('MINIO_SECRET_KEY', "root123456")
+MINIO_BUCKET = os.getenv('MINIO_BUCKET', "pjicloud")
+MINIO_SECURE = os.getenv('MINIO_SECURE', 'False').lower() in ['true', '1', 'yes', 'y', 't', 'on']
 
 
 def upload_file(filepath):
@@ -14,7 +16,7 @@ def upload_file(filepath):
         MINIO_HOST,
         access_key=ACCESS_KEY,
         secret_key=SECRET_KEY,
-        secure=True,
+        secure=MINIO_SECURE,
     )
 
     found = client.bucket_exists(MINIO_BUCKET)

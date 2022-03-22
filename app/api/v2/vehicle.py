@@ -11,7 +11,7 @@ def vehicle():
         return jsonify({
             "msg": "image 或 url 参数不存在",
             "code": 1
-        }), 400
+        }), 200
     result = vehicles_detector.object_detection(
         images=[image],
         use_gpu=True,

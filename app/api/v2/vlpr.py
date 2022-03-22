@@ -11,7 +11,7 @@ def vlpr():
         return jsonify({
             "msg": "image 或 url 参数不存在",
             "code": 1
-        }), 400
+        }), 200
     result = plate_recognition.plate_recognition(image)
 
     def format_data(result):

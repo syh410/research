@@ -16,7 +16,7 @@ def tts():
         return jsonify({
             "msg": "text 参数不存在",
             "code": 1
-        }), 400
+        }), 200
     wav_file = tts_executor(
         text=text,
         output='/tmp/' + str(uuid.uuid4()) + '.wav',

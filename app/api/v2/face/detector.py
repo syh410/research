@@ -12,7 +12,7 @@ def detector():
         return jsonify({
             "msg": "image 或 url 参数不存在",
             "code": 1,
-        }), 400
+        }), 200
     result = face_detector.face_detection(
         images=[image],
         use_gpu=True,
