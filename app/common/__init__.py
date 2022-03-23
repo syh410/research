@@ -3,8 +3,6 @@ import cv2
 import numpy as np
 import urllib
 import zipfile
-from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
 import os
 import shutil
 
@@ -34,21 +32,21 @@ def get_image_v2(image='image', url='url',images='images'):
         img_root_dir = "./images/"
         if not os.path.exists(img_root_dir):
             os.mkdir(img_root_dir)
-        profile.save(os.path.join(img_root_dir, secure_filename(profile.filename)))
-        zfile = zipfile.ZipFile(os.path.join(img_root_dir, secure_filename(profile.filename)),'r')
-        faceIds = []
-        images = []
-        for name in zfile.namelist()[1:]:
-            img = cv2.imdecode(np.fromstring(zfile.read(name), np.uint8), cv2.IMREAD_UNCHANGED)
-            if len(img.shape) > 2 and img.shape[2] == 4:
-                img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
-            Index1 = name.rfind("/")
-            Index2 = name.find(",")
-            faceid = name[Index1+1:Index2]
-            faceIds.append(faceid)
-            images.append(img)
-        shutil.rmtree(img_root_dir)
-        return mFaceids, mImages
+        profile.save(img_root_dir+profile.filename)
+        with zipfile.ZipFile(img_root_dir+profile.filename, mode="r") as zfile:
+            face_ids = []
+            images = []
+            for name in zfile.namelist()[1:]:
+                img = cv2.imdecode(np.fromstring(zfile.read(name), np.uint8), cv2.IMREAD_UNCHANGED)
+                if len(img.shape) > 2 and img.shape[2] == 4:
+                    img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+                Index1 = name.rfind("/")
+                Index2 = name.find(",")
+                face_id = name[Index1+1:Index2]
+                face_ids.append(face_id)
+                images.append(img)
+            shutil.rmtree(img_root_dir)
+            return face_ids, images
     
 
     return None
