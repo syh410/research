@@ -1,5 +1,8 @@
-from flask import jsonify
+import cv2
+from flask import jsonify, request
+from common import get_image_v2
 from . import face_bp
+from . import face_recognition_client
 
 
 @face_bp.route('/batch_upload', methods=['PUT', 'POST'])
@@ -14,7 +17,7 @@ def batch_upload():
     failed_id_list = []
     succ_num = 0
     fail_num = 0
-    for image in images:
+    for i, image in enumerate(images):
         image = cv2.imencode('.jpg', image)[1].tobytes()
         repo_id = request.form.get("repo_id")
         if repo_id is None:
@@ -29,15 +32,14 @@ def batch_upload():
             fail_num = fail_num + 1
         else:
             succ_num = succ_num + 1
-        i = i + 1
     if len(failed_id_list) > 0:
         return jsonify({
                 "code": 2,
-                "msg": "人脸批量上传未实现，共上传人脸" + str(i) + "张，上传成功" + str(succ_num) + "张，上传失败" + str(fail_num) + "张，失败人脸id为：" + ' '.join(failed_id_list)
+                "msg": "人脸批量上传未实现，共上传人脸" + str(succ_num+fail_num) + "张，上传成功" + str(succ_num) + "张，上传失败" + str(fail_num) + "张，失败人脸id为：" + ' '.join(failed_id_list)
             }), 500
     def format_data():
         return {
-            "msg": "人脸批量上传成功，共上传人脸" + str(i) + "张",
+            "msg": "人脸批量上传成功，共上传人脸" + str(succ_num) + "张",
             "code": 0
         }
 

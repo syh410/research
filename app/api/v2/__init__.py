@@ -7,10 +7,10 @@ v2_bp.register_blueprint(face_bp)
 
 __all__ = [
     "v2_bp",
-    "light",
-    "mask",
-    "pedestrian",
-    "tts",
-    "vehicle",
-    "vlpr"
+    # "light",
+    # "mask",
+    # "pedestrian",
+    # "tts",
+    # "vehicle",
+    # "vlpr"
 ]

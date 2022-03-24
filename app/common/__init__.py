@@ -46,7 +46,7 @@ def get_image_v2(image='image', url='url',images='images'):
                 face_ids.append(face_id)
                 images.append(img)
             shutil.rmtree(img_root_dir)
-            return face_ids, images
+        return face_ids, images
     
 
     return None
