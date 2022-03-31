@@ -11,7 +11,7 @@ def pedestrian():
         return jsonify({
             "msg": "image 或 url 参数不存在",
             "code": 1
-        }), 400
+        })
     result = pedestrian_detector.object_detection(
         images=[image],
         use_gpu=True,

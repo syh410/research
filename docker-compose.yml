@@ -17,4 +17,5 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
-
+    extra_hosts:
+      - "test.chinapji.com:192.168.66.247"
