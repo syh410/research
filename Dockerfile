@@ -14,8 +14,9 @@ deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe m
 deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse" > /etc/apt/sources.list
 
 RUN apt update && \
-    apt install -y ffmpeg \
+    apt install -y \
         libopencv-dev \
+        libsndfile1 \
         python3-pip \
         wget && \
     apt clean autoclean && \
@@ -32,9 +33,7 @@ RUN python3 -m pip install pip --upgrade && \
         grpcio \
         minio \
         paddlehub==2.2.0 \
-        paddlespeech \
-        pydub \
-        pytest-runner && \
+        paddlespeech && \
     pip install paddlepaddle-gpu==2.2.2.post112 -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
 
 ADD light.pth /root/

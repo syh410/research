@@ -1,6 +1,5 @@
 import uuid
 import paddle
-from pydub import AudioSegment
 from flask import jsonify, request, current_app
 from paddlespeech.cli import TTSExecutor
 from common.minio import upload_file
@@ -33,18 +32,11 @@ def tts():
         voc_ckpt=None,
         voc_stat=None,
         lang='zh',
-        device=paddle.get_device())
+        device='cpu')
     current_app.logger.info('Wave file has been generated: {}'.format(wav_file))
 
-    def wav_to_mp3(wav_file):
-        mp3_file = wav_file.replace(".wav", ".mp3")
-        AudioSegment.from_wav(wav_file).export(mp3_file, format="mp3")
-        current_app.logger.info('Mp3 file has been generated: {}'.format(mp3_file))
-        return mp3_file
-    
-    mp3_file = wav_to_mp3(wav_file)
-    url = upload_file(mp3_file)
-    current_app.logger.info('Remove mp3 file and wave file: {}, {}'.format(mp3_file, wav_file))
+    url = upload_file(wav_file)
+    current_app.logger.info('Remove wave file: {}'.format(wav_file))
     return jsonify({
         "url": url,
         "msg": "OK",

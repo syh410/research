@@ -41,3 +41,18 @@ class FaceRecognitionClient:
         request.image2 = image2
         reply = self.client.Compare(request)
         return reply.rtn, reply.score
+
+    def update(self, image, faceid, repoid):
+        request = face_recognition_pb2.UploadRequest()
+        request.image = image
+        request.faceId = faceid
+        request.repoId = repoid
+        reply = self.client.Update(request)
+        return reply.rtn
+
+    def delete(self, faceid, repoid):
+        request = face_recognition_pb2.DeleteRequest()
+        request.faceId = faceid
+        request.repoId = repoid
+        reply = self.client.Delete(request)
+        return reply.rtn

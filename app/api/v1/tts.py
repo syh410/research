@@ -1,6 +1,5 @@
 import uuid
 import paddle
-from pydub import AudioSegment
 from flask import send_file, request, current_app
 from paddlespeech.cli import TTSExecutor
 from . import v1_bp
@@ -29,14 +28,7 @@ def tts():
         voc_ckpt=None,
         voc_stat=None,
         lang='zh',
-        device=paddle.get_device())
+        device='cpu')
     current_app.logger.info('Wave file has been generated: {}'.format(wav_file))
 
-    def wav_to_mp3(wav_file):
-        mp3_file = wav_file.replace(".wav", ".mp3")
-        AudioSegment.from_wav(wav_file).export(mp3_file, format="mp3")
-        current_app.logger.info('Mp3 file has been generated: {}'.format(mp3_file))
-        return mp3_file
-    
-    mp3_file = wav_to_mp3(wav_file)
-    return send_file(mp3_file)
+    return send_file(wav_file)

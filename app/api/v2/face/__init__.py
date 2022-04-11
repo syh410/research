@@ -11,4 +11,6 @@ __all__ = [
     "search",
     "upload",
     "batch_upload",
+    "update",
+    "delete",
 ]
