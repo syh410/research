@@ -1,4 +1,4 @@
-from object_detection import ObjectDetector
+from object_detector import ObjectDetector
 from common import get_image_v2
 from flask import jsonify
 from . import v2_bp
@@ -19,5 +19,4 @@ def light():
             "count": len(result),
             "data": result
         }
-
     return jsonify(format_data(result))

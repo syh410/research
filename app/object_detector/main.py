@@ -13,9 +13,11 @@ class ObjectDetector:
         opts = [],
         threshold = 0.8):
         if not config_file:
-            config_file = "./object_detection/detectron2/configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"
+            path = os.path.dirname(__file__)
+            config_file = path + "/detectron2/configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"
         if not model_file:
-            model_file = "./object_detection/detectron2/demo/models/mask_rcnn_R_50_FPN_3x.pkl"
+            path = os.path.dirname(__file__)
+            model_file = path + "/detectron2/demo/models/mask_rcnn_R_50_FPN_3x.pkl"
         self.objectdetection = ObjectDetection(
             config_file=config_file,
             model_file=model_file,
@@ -42,8 +44,6 @@ class ObjectDetector:
                 },
                 "score": float(scores[i].item())
             })
-        print(result)
-        visualized_output.save("./")
         return result
 
 # def main():
