@@ -1,11 +1,11 @@
-from enum import Enum
+git from enum import Enum
 
 class TypeName(Enum):
     person = 0
     bicycle = 1
     car = 2
-    motorbike = 3
-    aeroplane = 4
+    motorcycle = 3
+    airplane = 4
     bus = 5
     train = 6
     truck = 7
@@ -58,12 +58,12 @@ class TypeName(Enum):
     donut = 54
     cake = 55
     chair = 56
-    sofa = 57
-    pottedplant = 58
+    couch = 57
+    potted_plant = 58
     bed = 59
-    diningtable = 60
+    dining_table = 60
     toilet = 61
-    tvmonitor = 62
+    tv = 62
     laptop = 63
     mouse = 64
     remote = 65

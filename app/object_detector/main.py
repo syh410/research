@@ -26,7 +26,7 @@ class ObjectDetector:
         )
     
     def detection(self, image):
-        predictions, visualized_output = self.objectdetection.inference(image)
+        predictions = self.objectdetection.inference(image)
         if len(predictions["instances"]) == 0:
             return []
         classes = predictions["instances"].pred_classes
@@ -35,14 +35,14 @@ class ObjectDetector:
         result = []
         for i, box in enumerate(boxes):        
             result.append({
-                "type": TypeName(classes[i].item()).name,
+                "label": TypeName(classes[i].item()).name,
+                "score": float(scores[i].item()),
                 "rect": {
+                    "bottom": float(box[3].item()),
                     "left": float(box[0].item()),
                     "right": float(box[2].item()),
                     "top": float(box[1].item()),
-                    "bottom": float(box[3].item()),
-                },
-                "score": float(scores[i].item())
+                }
             })
         return result
 
