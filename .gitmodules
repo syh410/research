@@ -4,3 +4,6 @@
 [submodule "app/light_detector/light_YOLOX"]
 	path = app/light_detector/light_YOLOX
 	url = git@github.com:shinoi2/light_YOLOX.git
+[submodule "app/object_detection/detectron2"]
+	path = app/object_detection/detectron2
+	url = git@github.com:shinoi2/detectron2.git
