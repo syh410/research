@@ -12,6 +12,6 @@ __all__ = [
     "pedestrian",
     "tts",
     "vehicle",
-    "vlpr"
+    "vlpr",
     "object"
 ]
