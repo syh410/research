@@ -39,11 +39,11 @@ RUN python3 -m pip install pip --upgrade && \
 ADD light.pth /root/
 ADD paddle.tar.gz /root/
 
-RUN hub install pyramidbox_lite_server && \
-    hub install pyramidbox_lite_server_mask && \
-    hub install Vehicle_License_Plate_Recognition && \
-    hub install yolov3_darknet53_pedestrian && \
-    hub install yolov3_darknet53_vehicles
+RUN hub install pyramidbox_lite_server==1.2.0 && \
+    hub install pyramidbox_lite_server_mask==1.3.1 && \
+    hub install Vehicle_License_Plate_Recognition==1.0.0 && \
+    hub install yolov3_darknet53_pedestrian==1.0.2 && \
+    hub install yolov3_darknet53_vehicles==1.0.2
 
 COPY ./app/light_detector/light_YOLOX /root/light_detector/light_YOLOX
 
