@@ -17,6 +17,10 @@ def vehicle():
         use_gpu=True,
         visualization=False)
 
+    vehicles_detector.gpu_predictor.clear_intermediate_tensor()
+    vehicles_detector.gpu_predictor.try_shrink_memory()
+
+
     def format_data(result):
         count = len(result["data"])
         data = []

@@ -17,6 +17,9 @@ def pedestrian():
         use_gpu=True,
         visualization=False)
 
+    pedestrian_detector.gpu_predictor.clear_intermediate_tensor()
+    pedestrian_detector.gpu_predictor.try_shrink_memory()
+
     def format_data(result):
         count = len(result["data"])
         data = []

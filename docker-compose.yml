@@ -9,8 +9,6 @@ services:
     image: shinoi2/pji-research:http_api_service
     environment:
       - GRPC_POLL_STRATEGY=poll
-    ports:
-      - "5000"
     deploy:
       resources:
         reservations:

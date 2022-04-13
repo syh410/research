@@ -17,6 +17,9 @@ def mask():
         use_gpu=True,
         visualization=False)
 
+    mask_detector.gpu_predictor.clear_intermediate_tensor()
+    mask_detector.gpu_predictor.try_shrink_memory()
+
     def format_data(result):
         count = len(result["data"])
         data = []
