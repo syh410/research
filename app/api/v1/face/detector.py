@@ -18,6 +18,10 @@ def detector():
         images=[image],
         use_gpu=True,
         visualization=False)
+
+    face_detector.gpu_predictor.clear_intermediate_tensor()
+    face_detector.gpu_predictor.try_shrink_memory()
+
     def format_data(result):
         count = len(result["data"])
         data = []

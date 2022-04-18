@@ -28,7 +28,7 @@ def tts():
         voc_ckpt=None,
         voc_stat=None,
         lang='zh',
-        device='cpu')
+        device=paddle.get_device())
     current_app.logger.info('Wave file has been generated: {}'.format(wav_file))
 
     return send_file(wav_file)

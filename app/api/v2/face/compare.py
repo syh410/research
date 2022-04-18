@@ -7,7 +7,7 @@ from . import face_recognition_client
 
 @face_bp.route('/compare', methods=['POST'])
 def compare():
-    image1 = get_image_v2(image='image1', url='url2')
+    image1 = get_image_v2(image='image1', url='url1')
     if image1 is None:
         return jsonify({
             "msg": "image1 或 url1 参数不存在",

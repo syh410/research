@@ -2,9 +2,22 @@ version: "3"
 services:
   face_recognition:
     image: shinoi2/pji-research:face_recognition
-    container_name: face_recognition
     volumes:
       - "/home/face_recognition/data:/data"
+  vehicle_detection:
+    image: shinoi2/pji-research:paddleserving
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    restart: always
+    volumes:
+      - "/home/pji/research/app/vehicle_detector/vehicle_server:/home/vehicle_server"
+    entrypoint:
+      - bash
+      - -c
+      - python3 -m paddle_serving_server.serve --model vehicle_server --port 9393 --gpu_id 0
   http_api_service:
     image: shinoi2/pji-research:http_api_service
     environment:
@@ -14,6 +27,9 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
+    restart: always
+    volumes:
+      - "/home/pji/research/app/api:/root/api"
     extra_hosts:
       - "test.chinapji.com:192.168.66.247"
   ngnix-server:

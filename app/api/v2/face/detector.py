@@ -4,7 +4,7 @@ from flask import jsonify
 from . import face_bp
 
 
-face_detector = hub.Module(name="pyramidbox_lite_server")
+face_detector = hub.Module(name="pyramidbox_face_detection")
 @face_bp.route('/detector', methods=['POST'])
 def detector():
     image = get_image_v2()

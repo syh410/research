@@ -12,7 +12,8 @@ def vehicle():
     result = vehicles_detector.object_detection(
         images=[image],
         use_gpu=True,
-        visualization=False)
+        visualization=False,
+        score_thresh=0.5)
     vehicles_detector.gpu_predictor.clear_intermediate_tensor()
     vehicles_detector.gpu_predictor.try_shrink_memory()
 
