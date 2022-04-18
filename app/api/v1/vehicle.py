@@ -34,4 +34,4 @@ def vehicle():
             "data": result,
         }
 
-    return jsonify(format_data(result[0]))
+    return jsonify(format_data(result))

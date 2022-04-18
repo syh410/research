@@ -12,14 +12,6 @@ def vehicle():
             "msg": "image 或 url 参数不存在",
             "code": 1
         })
-    result = vehicles_detector.object_detection(
-        images=[image],
-        use_gpu=True,
-        visualization=False,
-        score_thresh=0.5)
-    vehicles_detector.gpu_predictor.clear_intermediate_tensor()
-    vehicles_detector.gpu_predictor.try_shrink_memory()
-
     result = vehicles_detector.predict(image=image)
 
     def format_data(result):
@@ -47,4 +39,4 @@ def vehicle():
             "data": result,
         }
 
-    return jsonify(format_data(result[0]))
+    return jsonify(format_data(result))

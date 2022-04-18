@@ -44,12 +44,12 @@ class VehicleDetector:
                 continue
             result.append({
                 "label": self.label_map[int(cls)],
-                "score": score,
+                "score": float(score),
                 "rect": {
-                    "left": left,
-                    "top": top,
-                    "right": right,
-                    "bottom": bottom
+                    "left": float(left),
+                    "top": float(top),
+                    "right": float(right),
+                    "bottom": float(bottom)
                 }
             })
         return result
