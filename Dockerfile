@@ -52,6 +52,14 @@ RUN cd /root/light_detector/light_YOLOX && \
     pip install -r requirements.txt && \
     pip install -v -e .
 
+RUN wget https://paddle-serving.bj.bcebos.com/others/centos_ssl.tar && \
+    tar xf centos_ssl.tar && rm -rf centos_ssl.tar && \
+    mv libcrypto.so.1.0.2k /usr/lib/libcrypto.so.1.0.2k && mv libssl.so.1.0.2k /usr/lib/libssl.so.1.0.2k && \
+    ln -sf /usr/lib/libcrypto.so.1.0.2k /usr/lib/libcrypto.so.10 && \
+    ln -sf /usr/lib/libssl.so.1.0.2k /usr/lib/libssl.so.10 && \
+    ln -sf /usr/lib/libcrypto.so.10 /usr/lib/libcrypto.so && \
+    ln -sf /usr/lib/libssl.so.10 /usr/lib/libssl.so
+
 COPY ./app /root/
 
 ENTRYPOINT cd /root && python3 server.py

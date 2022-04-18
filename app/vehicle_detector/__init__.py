@@ -6,7 +6,7 @@ from paddle_serving_app.reader import DetectionSequential, \
     DetectionTranspose
 
 class VehicleDetector:
-    def __init__(self, url):
+    def __init__(self, url="vehicle_detection:9393"):
         self.preprocess = DetectionSequential([
             DetectionResize(
                 (608, 608), False, interpolation=2),
@@ -14,7 +14,16 @@ class VehicleDetector:
             DetectionTranspose((2, 0, 1)),
         ])
         self.client = Client()
-        self.client.load_client_config("./app/vehicle_detector/vehicle_client/serving_client_conf.prototxt")
+        self.thresholds = 0.1
+        self.label_map = [
+            "car",
+            "truck",
+            "bus",
+            "motorbike",
+            "tricycle",
+            "carplate"
+        ]
+        self.client.load_client_config("./vehicle_detector/vehicle_client/serving_client_conf.prototxt")
         if isinstance(url, str):
             self.client.connect([url])
         if isinstance(url, list):
@@ -29,4 +38,18 @@ class VehicleDetector:
             },
             fetch=["@HUB_yolov3_darknet53_vehicles@multiclass_nms.tmp_0"],
             batch=False)
-        return fetch_map
+        result = []
+        for cls, score, left, top, right, bottom in fetch_map["@HUB_yolov3_darknet53_vehicles@multiclass_nms.tmp_0"]:
+            if score <= self.thresholds:
+                continue
+            result.append({
+                "label": self.label_map[int(cls)],
+                "score": score,
+                "rect": {
+                    "left": left,
+                    "top": top,
+                    "right": right,
+                    "bottom": bottom
+                }
+            })
+        return result

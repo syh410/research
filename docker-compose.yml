@@ -13,7 +13,7 @@ services:
             - capabilities: [gpu]
     restart: always
     volumes:
-      - "/home/pji/research/app/vehicle_detector/vehicle_server:/home/vehicle_server"
+      - "/home/pji/workspace/ServingDocker/vehicle_server:/home/vehicle_server"
     entrypoint:
       - bash
       - -c
@@ -28,8 +28,6 @@ services:
           devices:
             - capabilities: [gpu]
     restart: always
-    volumes:
-      - "/home/pji/research/app/api:/root/api"
     extra_hosts:
       - "test.chinapji.com:192.168.66.247"
   ngnix-server:

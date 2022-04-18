@@ -1,9 +1,9 @@
-import paddlehub as hub
 from common import get_image_v2
 from flask import jsonify
 from . import v2_bp
+from vehicle_detector import VehicleDetector
 
-vehicles_detector = hub.Module(name="yolov3_darknet53_vehicles")
+vehicles_detector = VehicleDetector()
 @v2_bp.route('/vehicle', methods=['POST'])
 def vehicle():
     image = get_image_v2()
@@ -20,10 +20,10 @@ def vehicle():
     vehicles_detector.gpu_predictor.clear_intermediate_tensor()
     vehicles_detector.gpu_predictor.try_shrink_memory()
 
+    result = vehicles_detector.predict(image=image)
 
     def format_data(result):
-        count = len(result["data"])
-        data = []
+        count = len(result)
         count_map = {
             "car": 0,
             "truck": 0,
@@ -32,18 +32,8 @@ def vehicle():
             "tricycle": 0,
             "carplate": 0,
         }
-        for i in range(count):
-            data.append({
-                "rect": {
-                    "bottom": result["data"][i]["bottom"],
-                    "top": result["data"][i]["top"],
-                    "left": result["data"][i]["left"],
-                    "right": result["data"][i]["right"],
-                },
-                "label": result["data"][i]["label"],
-                "score": result["data"][i]["confidence"],
-            })
-            count_map[result["data"][i]["label"]] += 1
+        for item in result:
+            count_map[item["label"]] += 1
         return {
             "code": 0,
             "msg": "OK",
@@ -54,7 +44,7 @@ def vehicle():
             "motorbike_count": count_map["motorbike"],
             "tricycle_count": count_map["tricycle"],
             "carplate_count": count_map["carplate"],
-            "data": data,
+            "data": result,
         }
 
     return jsonify(format_data(result[0]))
