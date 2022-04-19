@@ -2,8 +2,9 @@ import paddlehub as hub
 from common import get_image_v2
 from flask import jsonify
 from . import v2_bp
+from pedestrian_detector import PedestrianDetector
 
-pedestrian_detector = hub.Module(name="yolov3_darknet53_pedestrian")
+pedestrian_detector = PedestrianDetector()
 @v2_bp.route('/pedestrian', methods=['POST'])
 def pedestrian():
     image = get_image_v2()
@@ -12,32 +13,14 @@ def pedestrian():
             "msg": "image 或 url 参数不存在",
             "code": 1
         })
-    result = pedestrian_detector.object_detection(
-        images=[image],
-        use_gpu=True,
-        visualization=False)
-
-    pedestrian_detector.gpu_predictor.clear_intermediate_tensor()
-    pedestrian_detector.gpu_predictor.try_shrink_memory()
-
+    result = pedestrian_detector.predict(image=image)
     def format_data(result):
-        count = len(result["data"])
-        data = []
-        for i in range(count):
-            data.append({
-                "rect": {
-                    "bottom": result["data"][i]["bottom"],
-                    "top": result["data"][i]["top"],
-                    "left": result["data"][i]["left"],
-                    "right": result["data"][i]["right"],
-                },
-                "score": result["data"][i]["confidence"]
-            })
+        count = len(result)
         return {
             "msg": "OK",
             "code": 0,
             "count": count,
-            "data": data
+            "data": result
         }
 
-    return jsonify(format_data(result[0]))
+    return jsonify(format_data(result))

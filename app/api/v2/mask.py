@@ -2,8 +2,12 @@ import paddlehub as hub
 from common import get_image_v2
 from flask import jsonify
 from . import v2_bp
+import cv2
+from face_detector import FaceDetector
+from mask_detector import MaskDetector
 
-mask_detector = hub.Module(name="pyramidbox_lite_server_mask")
+mask_detector = MaskDetector()
+face_detector = FaceDetector()
 @v2_bp.route('/mask', methods=['POST'])
 def mask():
     image = get_image_v2()
@@ -12,33 +16,27 @@ def mask():
             "msg": "image 或 url 参数不存在",
             "code": 1
         })
-    result = mask_detector.face_detection(
-        images=[image],
-        use_gpu=True,
-        visualization=False)
-
-    mask_detector.gpu_predictor.clear_intermediate_tensor()
-    mask_detector.gpu_predictor.try_shrink_memory()
-
-    def format_data(result):
-        count = len(result["data"])
-        data = []
-        mask_count = no_mask_count = 0
-        for i in range(count):
+    results = face_detector.predict(image=image)
+    image = cv2.resize(image, (1024, 1024))
+    data = []
+    mask_count = no_mask_count = 0
+    for result in results:
+        rect = result['rect']
+        img = image[int(rect['left']):int(rect['right']), int(rect['top']):int(rect['bottom'])]
+        masks= mask_detector.predict(image=img)
+        for mask in masks:
             data.append({
-                "rect": {
-                    "bottom": result["data"][i]["bottom"],
-                    "top": result["data"][i]["top"],
-                    "left": result["data"][i]["left"],
-                    "right": result["data"][i]["right"],
-                },
-                "mask": result["data"][i]["label"] == "MASK",
-                "score": result["data"][i]["confidence"],
-            })
-            if result["data"][i]["label"] == "MASK":
+                    "score": mask['score'],
+                    "rect": rect,
+                    "mask": mask['mask'],
+                })
+            if mask['mask'] == True:
                 mask_count += 1
             else:
                 no_mask_count += 1
+
+    def format_data(data, mask_count, no_mask_count):
+        count = len(data)
         return {
             "msg": "OK",
             "code": 0,
@@ -48,4 +46,4 @@ def mask():
             "data": data,
         }
 
-    return jsonify(format_data(result[0]))
+    return jsonify(format_data(data, mask_count, no_mask_count))

@@ -6,7 +6,7 @@ from paddle_serving_app.reader import DetectionSequential, \
     DetectionTranspose
 
 class VehicleDetector:
-    def __init__(self, url="vehicle_detection:9393"):
+    def __init__(self, url="vehicle_detection:9393", thresholds = 0.5):
         self.preprocess = DetectionSequential([
             DetectionResize(
                 (608, 608), False, interpolation=2),
@@ -14,7 +14,7 @@ class VehicleDetector:
             DetectionTranspose((2, 0, 1)),
         ])
         self.client = Client()
-        self.thresholds = 0.1
+        self.thresholds = thresholds
         self.label_map = [
             "car",
             "truck",
