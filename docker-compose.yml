@@ -18,6 +18,52 @@ services:
       - bash
       - -c
       - python3 -m paddle_serving_server.serve --model vehicle_server --port 9393 --gpu_id 0
+
+  pedestrian_detection:
+    image: shinoi2/pji-research:paddleserving
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    restart: always
+    volumes:
+      - "/home/pji/workspace/ServingDocker/pedestrian_server:/home/pedestrian_server"
+    entrypoint:
+      - bash
+      - -c
+      - python3 -m paddle_serving_server.serve --model pedestrian_server --port 9394 --gpu_id 0
+
+  face_detection:
+    image: shinoi2/pji-research:paddleserving
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    restart: always
+    volumes:
+      - "/home/pji/workspace/ServingDocker/face_server:/home/face_server"
+    entrypoint:
+      - bash
+      - -c
+      - python3 -m paddle_serving_server.serve --model vehicle_server --port 9395 --gpu_id 0
+
+  mask_detection:
+    image: shinoi2/pji-research:paddleserving
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    restart: always
+    volumes:
+      - "/home/pji/workspace/ServingDocker/mask_server:/home/mask_server"
+    entrypoint:
+      - bash
+      - -c
+      - python3 -m paddle_serving_server.serve --model mask_server --port 9396 --gpu_id 0
+  
   http_api_service:
     image: shinoi2/pji-research:http_api_service
     environment:

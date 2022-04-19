@@ -1,0 +1,17 @@
+feed_var {
+  name: "image"
+  alias_name: "image"
+  is_lod_tensor: false
+  feed_type: 1
+  shape: 3
+  shape: 1024
+  shape: 1024
+}
+fetch_var {
+  name: "detection_output_0.tmp_0"
+  alias_name: "detection_output_0.tmp_0"
+  is_lod_tensor: false
+  fetch_type: 1
+  shape: 87360
+  shape: 6
+}

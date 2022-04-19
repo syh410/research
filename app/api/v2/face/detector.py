@@ -2,9 +2,10 @@ import paddlehub as hub
 from common import get_image_v2
 from flask import jsonify
 from . import face_bp
+from face_detector import FaceDetector
 
 
-face_detector = hub.Module(name="pyramidbox_face_detection")
+face_detector = FaceDetector()
 @face_bp.route('/detector', methods=['POST'])
 def detector():
     image = get_image_v2()
@@ -13,32 +14,15 @@ def detector():
             "msg": "image 或 url 参数不存在",
             "code": 1,
         })
-    result = face_detector.face_detection(
-        images=[image],
-        use_gpu=True,
-        visualization=False)
-
-    face_detector.gpu_predictor.clear_intermediate_tensor()
-    face_detector.gpu_predictor.try_shrink_memory()
+    result = face_detector.predict(image=image)
 
     def format_data(result):
-        count = len(result["data"])
-        data = []
-        for i in range(count):
-            data.append({
-                "rect": {
-                    "bottom": result["data"][i]["bottom"],
-                    "top": result["data"][i]["top"],
-                    "left": result["data"][i]["left"],
-                    "right": result["data"][i]["right"],
-                },
-                "score": result["data"][i]["confidence"]
-            })
+        count = len(result)
         return {
             "msg": "OK",
             "code": 0,
             "count": count,
-            "data": data
+            "data": result
         }
 
-    return jsonify(format_data(result[0]))
+    return jsonify(format_data(result))
