@@ -1,4 +1,3 @@
-import cv2
 from paddle_serving_client import Client
 from paddle_serving_app.reader import DetectionSequential, \
     DetectionResize, \
@@ -30,17 +29,20 @@ class FaceDetector:
             fetch=["detection_output_0.tmp_0"],
             batch=False)
         result = []
+        image_h = image.shape[0]
+        image_w = image.shape[1]
         for data in fetch_map['detection_output_0.tmp_0']:
             if float(data[1]) <= self.thresholds:
                 continue
             result.append({
                 "score": float(data[1]),
                 "rect":{
-                    "left": float(max(data[2]*1000, 0)),
-                    "top": float(max(data[3]*1000, 0)),
-                    "right": float(max(data[4]*1000, 0)),
-                    "bottom": float(max(data[5]*1000, 0))
+                    "left": float(max(data[2]*image_w, 0)),
+                    "top": float(max(data[3]*image_h, 0)),
+                    "right": float(max(data[4]*image_w, 0)),
+                    "bottom": float(max(data[5]*image_h, 0))
                 }
             })
+
 
         return result

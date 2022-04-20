@@ -1,4 +1,3 @@
-import cv2
 from paddle_serving_client import Client
 from paddle_serving_app.reader import DetectionSequential, \
     DetectionResize, \

@@ -1,9 +1,9 @@
-import cv2
 from paddle_serving_client import Client
 from paddle_serving_app.reader import DetectionSequential, \
     DetectionResize, \
     DetectionNormalize, \
     DetectionTranspose
+import numpy as np
 
 class MaskDetector:
     def __init__(self, url= 'mask_detection:9396', thresholds = 0.5):
@@ -21,14 +21,17 @@ class MaskDetector:
         if isinstance(url, list):
             self.client.connect(url)
 
-    def predict(self, image):
-        im, _ = self.preprocess(image)
+    def predict(self, images):
+        ims = []
+        for image in images:
+            im, _ = self.preprocess(image)
+            ims.append(im)
         fetch_map = self.client.predict(
             feed={
-                "image": im,
+                "image": np.array(ims),
             },
             fetch=["save_infer_model/scale_0"],
-            batch=False)
+            batch=True)
         result = []
         for data in fetch_map['save_infer_model/scale_0']:
             mask = True

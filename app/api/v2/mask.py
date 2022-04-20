@@ -2,9 +2,9 @@ import paddlehub as hub
 from common import get_image_v2
 from flask import jsonify
 from . import v2_bp
-import cv2
 from face_detector import FaceDetector
 from mask_detector import MaskDetector
+
 
 mask_detector = MaskDetector()
 face_detector = FaceDetector()
@@ -17,24 +17,24 @@ def mask():
             "code": 1
         })
     results = face_detector.predict(image=image)
-    image = cv2.resize(image, (1024, 1024))
     data = []
     mask_count = no_mask_count = 0
-    for result in results:
-        rect = result['rect']
-        img = image[int(rect['left']):int(rect['right']), int(rect['top']):int(rect['bottom'])]
-        masks= mask_detector.predict(image=img)
-        for mask in masks:
-            data.append({
-                    "score": mask['score'],
-                    "rect": rect,
-                    "mask": mask['mask'],
-                })
-            if mask['mask'] == True:
-                mask_count += 1
-            else:
-                no_mask_count += 1
-
+    images = []
+    rect = []
+    for  i, result in enumerate(results):
+        rect.append(result['rect'])
+        images.append(image[int(rect[i]['top'] - 1):int(rect[i]['bottom'] + 1), int(rect[i]['left'] - 1):int(rect[i]['right'] + 1)])
+    results= mask_detector.predict(images=images)
+    for i, result in enumerate(results):
+        data.append({
+                "score": result['score'],
+                "rect": rect[i],
+                "mask": result['mask'],
+            })
+        if result['mask'] == True:
+            mask_count += 1
+        else:
+            no_mask_count += 1
     def format_data(data, mask_count, no_mask_count):
         count = len(data)
         return {
