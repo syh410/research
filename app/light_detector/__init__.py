@@ -1,1 +1,1 @@
-from .main import LightDetector
+from .light_client import LightDetectionClient
