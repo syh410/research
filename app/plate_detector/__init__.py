@@ -1,0 +1,2 @@
+from .plate_client import PlateDetectionClient
+from .lprnet_client import LprnetDetectionClient

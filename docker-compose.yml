@@ -4,11 +4,33 @@ services:
     image: shinoi2/pji-research:face_recognition
     volumes:
       - "/home/face_recognition/data:/data"
+
   light_detection:
     image: shinoi2/pji-research:light
     restart: always
     volumes:
       - "/home/pji/workspace/light_Docker:/workspace"
+
+  lprnet_detection_test:
+    image: shinoi2/pji-research:lprnet
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    volumes:
+      - "/home/pji/workspace/LPRNet_Pytorch/app:/workspace"
+
+  plate_detection_test:
+    image: shinoi2/pji-research:plate
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    volumes:
+      - "/home/pji/workspace/Plate_Docker:/workspace"
+
   vehicle_detection:
     image: shinoi2/pji-research:paddleserving
     deploy:
